@@ -412,8 +412,28 @@ class GeographyDetailView(TemplateView):
         # store static version on S3
         s3_key.set_contents_from_file(memfile)
 
+
+    def get_narrative_url(self,geography_id):
+        narrative_url = "http://thedataweb.rm.census.gov/TheDataWeb_HotReport2/profile/2013/5yr/np01.hrml?"
+        sumlev_id = geography_id[:3]
+
+        if sumlev_id == '040':
+            county = geography_id[]
+
+
+        # state_id = geography_id[7:9]
+        # place_id = geography_id[9:]
+        return narrative_url
+
+
+        # print sumlev_id,state_id,place_id
+
     def get_context_data(self, *args, **kwargs):
         geography_id = self.geo_id
+        print geography_id
+
+        narrative_url = self.get_narrative_url(geography_id)
+
 
         try:
             s3_key = self.s3_profile_key(geography_id)
@@ -449,9 +469,11 @@ class GeographyDetailView(TemplateView):
                 raise Http404
 
         page_context = {
-            'profile_data_json': profile_data_json
+            'profile_data_json': profile_data_json,
+            'narrative_url' : narrative_url
         }
         page_context.update(profile_data)
+
 
         return page_context
 
